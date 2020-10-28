@@ -1,0 +1,60 @@
+.card {
+  display: flex;    
+  flex-direction: row;  
+  width: 70%;
+  height: 150px;
+  margin: 10px auto 0px auto;
+  border-bottom: 0.5px solid grey;
+}
+.card > .setting {
+  display: flex;
+  width: 75px;
+  flex-direction: column;
+  width: 75px;    
+}
+.setting > .tools, .editPost, .delPost {
+  margin-top: 10px;
+}
+.card > .image {
+  width: 100px;
+  margin: 0 20px 0 0;
+  padding-top: 20px;
+}
+.card > .post {
+  flex-grow: 7;
+  font-family: Calibre;
+  font-size: 20px;
+  padding-top: 20px;
+}
+.card > .likes {
+  display: flex;   
+  width: 95px; 
+  margin-left: auto;
+  padding-top: 20px;
+  flex-direction: row;
+}
+.likes > .likeNumber {
+  width: 40px;
+  text-align: center;
+  font-family: Calibre;
+  font-size: 20px;
+  padding-top: 10px;
+  margin-left: 20px;
+}
+.likes > .iconHeart {
+  color: red;
+  font-size: 35px;
+  cursor: pointer;
+}
+.favorite {
+  font-size: 25px;
+  color: dodgerBlue
+}
+img {
+  border-radius: 50%;
+  width: 100px;
+}
+.tool {
+  margin-left: 10px;
+}
+
