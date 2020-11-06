@@ -1,6 +1,5 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../index.css';
 import { StarOutlined, SearchOutlined } from '@ant-design/icons';
 import styles from '../Style.module.css';
 import Card from './cardFavorites';
