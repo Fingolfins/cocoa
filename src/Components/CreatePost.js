@@ -1,30 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'antd/dist/antd.css';
 import '../index.css';
 import { Form, Input, Button } from 'antd';
 
 
-const CreatePost = ({ addPost }) => {
+const CreatePost = ({ addPost, initialValue }) => {
   const [form] = Form.useForm();   
-  const [formLayout] = useState('horizontal');
-  const [editValue, setEditValue] = useState({title: '', author: '', image: ''})
-  
+  const [formLayout] = useState('horizontal');  
+  const [id, setId] = React.useState(0)
   const onReset = () => {
+    setId(0)
     form.resetFields();
   }; 
-  const handlePost = (values) => {
-    values.isFavorite = false;
-    values.likes = 0;    
+  const handlePost = (values) => {    
+    if (!id) {
+        values.id = 0;
+        values.likes = 0;
+        values.isFavorite = false;
+      } else {
+        values.id = id;        
+        values.likes = initialValue.likes;
+        values.isFavorite = initialValue.isFavorite;
+      }    
     addPost(values);
     onReset();       
   };
 
-  const editMode = () => {
-    setEditValue()
-  }
-  const buttonEdit = () => {
-    return <button onClick={editMode}>Edit</button>
-  }
+  useEffect(() => {
+    form.setFieldsValue(initialValue)
+    setId(initialValue.id)}
+    , [form, initialValue]) 
   
   const formItemLayout =
     formLayout === 'horizontal'
@@ -51,13 +56,13 @@ const CreatePost = ({ addPost }) => {
         initialValues={{ layout: formLayout }}
         onFinish={handlePost}                           
       >        
-        <Form.Item name='title' initialValue={editValue.title} rules={[{ required: true, message: "Please Enter Your Post's Title!" }]}>
+        <Form.Item name='title' rules={[{ required: true, message: "Please Enter Your Post's Title!" }]}>
           <Input placeholder="Please Enter Your Post's Tile" style={{borderRadius : '10px'}} />
         </Form.Item>
-        <Form.Item name='author' initialValue={editValue.author} rules={[{ required: true, message: "Please Enter Your Name!" }]}>
+        <Form.Item name='author' rules={[{ required: true, message: "Please Enter Your Name!" }]}>
           <Input allowClear placeholder="Please Enter Your Name" style={{borderRadius : '10px'}} />
         </Form.Item>
-        <Form.Item name='image' initialValue={editValue.image}>
+        <Form.Item name='image'>
           <Input placeholder="Please Enter Your Image's URL" style={{borderRadius : '10px'}} />
         </Form.Item>
         <Form.Item {...buttonItemLayout}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../Style.module.css';
-import { HeartFilled, HeartOutlined, EllipsisOutlined , EditOutlined } from '@ant-design/icons';
+import { HeartFilled, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import pic1 from '../Images/womens.jpg';
 import pic2 from '../Images/love_in.jpg';
@@ -8,10 +8,7 @@ import pic3 from '../Images/komaru.jpg';
 import pic4 from '../Images/tngan.jpg';
 import CreatePost from './CreatePost';
 
-
-export function Card({ card, index, toggleFavorite, removePost, toggleEdit }) {
-
-  
+export function Card({ card, index, toggleFavorite, removePost, toggleEdit, getEditValue }) {
   const renderHeart = (isFavorite) => {
     if( !isFavorite ) {
       return <HeartOutlined />
@@ -24,11 +21,10 @@ export function Card({ card, index, toggleFavorite, removePost, toggleEdit }) {
       return ''
     } else { 
     return ([
-      <EditOutlined className={styles.editIcon} />,
+      <div><Button>Edit</Button></div>,
       <div ><Button>Xóa</Button></div>]);
     }
   };
-
   return (
     <div className={styles.card}>
       <div className={styles.setting}>
@@ -37,7 +33,9 @@ export function Card({ card, index, toggleFavorite, removePost, toggleEdit }) {
             <EllipsisOutlined />
           </Button>
         </div>
-        <div className={styles.editPost}><Button>Edit</Button></div>
+        <div className={styles.editPost} onClick={() => getEditValue(card)}>
+        {handleEdit(card.isEditAble)[0]}
+        </div>
         <div className={styles.delPost} onClick={() => removePost(index)}>
           {handleEdit(card.isEditAble)[1]}
         </div>        
@@ -60,6 +58,7 @@ export function Card({ card, index, toggleFavorite, removePost, toggleEdit }) {
 function Posts() {
   const [posts, setPosts] = React.useState([
     {
+      id: 1,
       image: pic1,
       title: "Women's Problems Illustrated In 22 Cute Comics",
       author: 'By Cassandra Calin',      
@@ -68,6 +67,7 @@ function Posts() {
       isEditAble: false
     },
     {
+      id: 2,
       image: pic2,
       title: "Love In The Little Thing Illustrated In Heartwarming Comics",
       author: 'By Cocoa',      
@@ -76,6 +76,7 @@ function Posts() {
       isEditAble: false
     },
     {
+      id: 3,
       image: pic3,
       title: "A Funny Cat Calendar For All The Cat Lovers Out There",
       author: 'By Komaru',      
@@ -84,6 +85,7 @@ function Posts() {
       isEditAble: false
     },
     {
+      id: 4,
       image: pic4,
       title: "Fantastic Art That MacBook Owners Created For Their Machines",
       author: 'By Thanh Ngan',      
@@ -91,7 +93,8 @@ function Posts() {
       isFavorite: true,
       isEditAble: false
     }
-  ]);
+  ])
+  const [editValue, setEditValue] = React.useState({})
   
   const toggleFavorite = index => {
     const newPosts = [...posts];    
@@ -103,8 +106,7 @@ function Posts() {
       newPosts[index].likes = posts[index].likes + 1
     }
     setPosts(newPosts);
-  };
-
+  }
   const toggleEdit = (card, index) => {
     const newPosts = [...posts];  
     if (newPosts[index].isEditAble === true) {
@@ -112,34 +114,41 @@ function Posts() {
     } else {
       newPosts[index].isEditAble = true;
     }  
-    setPosts(newPosts);
+    setPosts(newPosts);  
     return card
-  };
-
+  }  
   const removePost  = index => {
     const newPosts = [...posts];
     newPosts.splice(index, 1);
     setPosts(newPosts)
-  }
-
+  }  
   const taoPost = addNewPost => {    
-    const newPosts = [...posts, addNewPost];  
-    setPosts(newPosts)
+    if (addNewPost.id === 0) {
+      addNewPost.id = posts.length + 1
+      const newPosts = [...posts, addNewPost];         
+      setPosts(newPosts)  
+    } else {
+      const i = editValue.id - 1  
+      posts[i] = addNewPost;
+      const newPosts = [...posts]   
+      setPosts(newPosts)  
+    }  
   } 
-  
+  const getEditValue = (card) => {
+    setEditValue(card)
+  }
   return(
     <div>
       <div>
         {posts.map((card, index) => (<Card 
         key={index} index={index} card={card} toggleFavorite={toggleFavorite} 
-        toggleEdit={toggleEdit} addPost={taoPost} removePost={removePost}/>))}
+        toggleEdit={toggleEdit} addPost={taoPost} removePost={removePost}
+        getEditValue={getEditValue} />))}
       </div>
-      <CreatePost addPost={taoPost} />
+      <CreatePost addPost={taoPost} initialValue={editValue}/>
        
     </div>
   );
 }
-
-
 
 export default Posts;
